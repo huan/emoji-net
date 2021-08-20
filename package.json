@@ -45,6 +45,9 @@
       "pre-push": "npx git-scripts-pre-push"
     }
   },
+  "tap": {
+    "check-coverage": false
+  },
   "publishConfig": {
     "tag": "next"
   }

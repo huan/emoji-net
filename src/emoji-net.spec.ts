@@ -62,7 +62,7 @@ test('EmojiNet smoke testing', async t => {
       .map(file => emojinet.classify(file))
   )
 
-  const emojiList = predictItemList.map(x => x[0])
+  const emojiList = predictItemList.map(x => x[0].name)
   const EXPECTED_LIST = FIXTURE_IMAGE_LABEL_LIST.map(x => x.name)
 
   t.same(emojiList, EXPECTED_LIST, 'should get the labels right')

@@ -24,7 +24,7 @@ import {
 }                       from '@tensorflow/tfjs-converter'
 import {
   EmojiId,
-  EmojiLabel,
+  EmojiName,
   EMOJI_CLASSES,
 }                       from './emoji-classes'
 import {
@@ -45,6 +45,12 @@ const INPUT_NODE_NAME = 'input'
 const OUTPUT_NODE_NAME = 'final_result'
 const PREPROCESS_DIVISOR = tfc.scalar(255 / 2)
 
+interface PredictItem {
+  id          : EmojiId,
+  name        : EmojiName,
+  probobility : number,
+}
+
 class EmojiNet {
 
   model?: FrozenModel
@@ -55,13 +61,11 @@ class EmojiNet {
       WEIGHT_MANIFEST_FILE_URL
     )
 
-    this.model.predict(
-      tfc.zeros([
-        MOBILENET_SIZE,
-        MOBILENET_SIZE,
-        3,
-      ])
-    )
+    this.predict(tfc.zeros([
+      MOBILENET_SIZE,
+      MOBILENET_SIZE,
+      3,
+    ]))
   }
 
   dispose () {
@@ -70,7 +74,7 @@ class EmojiNet {
     }
   }
 
-  async scan (src: string | Buffer): Promise<EmojiLabel[]> {
+  async classify (src: string | Buffer): Promise<PredictItem[]> {
     const image         = await loadImage(src)
     const resizedImage  = await resizeImage(image, MOBILENET_SIZE, MOBILENET_SIZE)
 
@@ -81,10 +85,10 @@ class EmojiNet {
     ctx.putImageData(resizedImage, 0, 0)
     const pixels = tfc.fromPixels(canvas)
 
-    const result = this.predict(pixels)
-    const top3 = this.getTopKClasses(result, 3)
+    const predictions = this.predict(pixels)
+    const top3 = this.getTopKClasses(predictions, 3)
 
-    return top3.map(x => x.label)
+    return top3
   }
 
   /**
@@ -108,21 +112,28 @@ class EmojiNet {
     return this.model!.execute(dict, OUTPUT_NODE_NAME) as tfc.Tensor1D
   }
 
-  protected getTopKClasses (predictions: tfc.Tensor1D, topK: number) {
+  protected getTopKClasses (
+    predictions: tfc.Tensor1D,
+    topK: number,
+  ): PredictItem[] {
     const values = predictions.dataSync()
     predictions.dispose()
 
     let predictionList = []
     for (let i = 0; i < values.length; i++) {
-      predictionList.push({ index: i, value: values[i] })
+      predictionList.push({
+        index: i,
+        probobility: values[i],
+      })
     }
     predictionList = predictionList.sort((a, b) => {
-      return b.value - a.value
+      return b.probobility - a.probobility
     }).slice(0, topK)
 
     return predictionList.map(x => ({
-      label: EMOJI_CLASSES[x.index as EmojiId],
-      value: x.value,
+      id: x.index as EmojiId,
+      name: EMOJI_CLASSES[x.index as EmojiId],
+      probobility: x.probobility,
     }))
   }
 

@@ -445,11 +445,7 @@ const EMOJI_CLASSES = {
 } as const
 
 export type EmojiId = keyof typeof EMOJI_CLASSES
-export type EmojiLabel = typeof EMOJI_CLASSES[EmojiId]
-export interface Emoji {
-  id    : EmojiId
-  label : EmojiLabel
-}
+export type EmojiName = typeof EMOJI_CLASSES[EmojiId]
 
 export {
   EMOJI_CLASSES,

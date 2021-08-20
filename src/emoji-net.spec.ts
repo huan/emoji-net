@@ -34,36 +34,36 @@ import {
   EmojiNet,
 }                   from './emoji-net'
 
+const FIXTURE_IMAGE_LABEL_LIST = [
+  {
+    file: path.join(
+      __dirname,
+      '../tests/fixtures/hand.jpg',
+    ),
+    name: 'hand',
+  },
+  {
+    file: path.join(
+      __dirname,
+      '../tests/fixtures/sofa.jpg',
+    ),
+    name: 'sofa',
+  },
+]
+
 test('EmojiNet smoke testing', async t => {
 
   const emojinet = new EmojiNet()
   await emojinet.load()
 
-  const IMAGE_LABEL_LIST = [
-    {
-      file: path.join(
-        __dirname,
-        '../tests/fixtures/hand.jpg',
-      ),
-      label: 'hand',
-    },
-    {
-      file: path.join(
-        __dirname,
-        '../tests/fixtures/sofa.jpg',
-      ),
-      label: 'sofa',
-    },
-  ]
-
-  const emojiListList = await Promise.all(
-    IMAGE_LABEL_LIST
+  const predictItemList = await Promise.all(
+    FIXTURE_IMAGE_LABEL_LIST
       .map(x => x.file)
-      .map(file => emojinet.recognize(file))
+      .map(file => emojinet.classify(file))
   )
 
-  const emojiList = emojiListList.map(x => x[0])
-  const EXPECTED_LIST = IMAGE_LABEL_LIST.map(x => x.label)
+  const emojiList = predictItemList.map(x => x[0])
+  const EXPECTED_LIST = FIXTURE_IMAGE_LABEL_LIST.map(x => x.name)
 
   t.same(emojiList, EXPECTED_LIST, 'should get the labels right')
 
@@ -87,24 +87,7 @@ test('EmojiNet predict() & getTopKClasses()', async t => {
   const emojinet = new EmojiNetTest()
   await emojinet.load()
 
-  const IMAGE_LABEL_LIST = [
-    {
-      file: path.join(
-        __dirname,
-        '../tests/fixtures/hand.jpg',
-      ),
-      name: 'hand',
-    },
-    {
-      file: path.join(
-        __dirname,
-        '../tests/fixtures/sofa.jpg',
-      ),
-      name: 'sofa',
-    },
-  ]
-
-  for (const { file, name } of IMAGE_LABEL_LIST) {
+  for (const { file, name } of FIXTURE_IMAGE_LABEL_LIST) {
     const image = await loadImage(file)
     const resizedImage = await resizeImage(image, MOBILENET_SIZE, MOBILENET_SIZE)
 
@@ -113,12 +96,14 @@ test('EmojiNet predict() & getTopKClasses()', async t => {
     if (!ctx) {
       throw new Error('no ctx')
     }
+
     ctx.putImageData(resizedImage, 0, 0)
     const pixels = tfc.fromPixels(canvas)
+
     const result = await emojinet.predict(pixels)
 
     const top2 = emojinet.getTopKClasses(result, 2)
-    t.equal(top2[0].label, name, 'should get the right lable: ' + name)
+    t.equal(top2[0].name, name, 'should get the right lable: ' + name)
   }
 
   await emojinet.dispose()

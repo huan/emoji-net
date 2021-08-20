@@ -12,17 +12,17 @@ cp tests/fixtures/* "$TMPDIR"
 cd $TMPDIR
 npm init -y
 npm install *-*.*.*.tgz \
-  @chatie/tsconfig \
-  typescript@next
+  @chatie/tsconfig
 
 ./node_modules/.bin/tsc \
   --target es5 \
-  --lib esnext \
+  --lib esnext,dom \
   --noEmitOnError \
   --noImplicitAny \
   --experimentalDecorators \
   --emitDecoratorMetadata \
   --esModuleInterop \
+  --skipLibCheck \
   smoke-testing.ts
 
 node smoke-testing.js

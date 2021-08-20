@@ -31,7 +31,7 @@ Pull Requests are welcome!
 ```js
 import { EmojiNet } from 'emoji-net'
 
-const emojinet = await new EmojiNet()
+const emojinet = new EmojiNet()
 
 // Load the model and warm it up
 await emojinet.load()

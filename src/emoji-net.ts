@@ -17,11 +17,8 @@
  */
 import 'isomorphic-fetch'
 
-import * as tfc from '@tensorflow/tfjs-core'
-import {
-  loadFrozenModel,
-  FrozenModel,
-}                       from '@tensorflow/tfjs-converter'
+import * as tfjs from '@tensorflow/tfjs'
+
 import {
   EmojiId,
   EmojiName,
@@ -33,17 +30,17 @@ import {
   resizeImage,
 }                         from './canvas-utils'
 
-type TensorMap = {[name: string]: tfc.Tensor}
+type TensorMap = {[name: string]: tfjs.Tensor}
 
 const MOBILENET_SIZE = 224
 
-const MODEL_FILE_URL = 'https://emojiscavengerhunt.withgoogle.com/model/tensorflowjs_model.pb'
+// const MODEL_FILE_URL = 'https://emojiscavengerhunt.withgoogle.com/model/tensorflowjs_model.pb'
 const WEIGHT_MANIFEST_FILE_URL = 'https://emojiscavengerhunt.withgoogle.com/model/weights_manifest.json'
 // const MODEL_FILE_URL = 'file:///model/tensorflowjs_model.pb'
 // const WEIGHT_MANIFEST_FILE_URL = 'file:///model/weights_manifest.json'
 const INPUT_NODE_NAME = 'input'
 const OUTPUT_NODE_NAME = 'final_result'
-const PREPROCESS_DIVISOR = tfc.scalar(255 / 2)
+const PREPROCESS_DIVISOR = tfjs.scalar(255 / 2)
 
 interface PredictItem {
   id          : EmojiId,
@@ -53,15 +50,14 @@ interface PredictItem {
 
 class EmojiNet {
 
-  model?: FrozenModel
+  model?: tfjs.GraphModel
 
   async load () {
-    this.model = await loadFrozenModel(
-      MODEL_FILE_URL,
-      WEIGHT_MANIFEST_FILE_URL
+    this.model = await tfjs.loadGraphModel(
+      WEIGHT_MANIFEST_FILE_URL,
     )
 
-    this.predict(tfc.zeros([
+    this.predict(tfjs.zeros([
       MOBILENET_SIZE,
       MOBILENET_SIZE,
       3,
@@ -83,7 +79,7 @@ class EmojiNet {
     if (!ctx) { throw new Error('no ctx') }
 
     ctx.putImageData(resizedImage, 0, 0)
-    const pixels = tfc.fromPixels(canvas)
+    const pixels = await tfjs.browser.fromPixelsAsync(canvas)
 
     const predictions = this.predict(pixels)
     const top3 = this.getTopKClasses(predictions, 3)
@@ -99,9 +95,9 @@ class EmojiNet {
    * @param input un-preprocessed input Array.
    * @return The softmax logits.
    */
-  protected predict (input: tfc.Tensor): tfc.Tensor1D {
-    const preprocessedInput = tfc.div(
-      tfc.sub(input.asType('float32'), PREPROCESS_DIVISOR),
+  protected predict (input: tfjs.Tensor): tfjs.Tensor1D {
+    const preprocessedInput = tfjs.div(
+      tfjs.sub(input.asType('float32'), PREPROCESS_DIVISOR),
       PREPROCESS_DIVISOR)
     const reshapedInput = preprocessedInput.reshape([
       1,
@@ -109,11 +105,11 @@ class EmojiNet {
     ])
     const dict: TensorMap = {}
     dict[INPUT_NODE_NAME] = reshapedInput
-    return this.model!.execute(dict, OUTPUT_NODE_NAME) as tfc.Tensor1D
+    return this.model!.execute(dict, OUTPUT_NODE_NAME) as tfjs.Tensor1D
   }
 
   protected getTopKClasses (
-    predictions: tfc.Tensor1D,
+    predictions: tfjs.Tensor1D,
     topK: number,
   ): PredictItem[] {
     const values = predictions.dataSync()

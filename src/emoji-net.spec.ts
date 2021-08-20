@@ -22,7 +22,7 @@
 import path from 'path'
 
 import { test } from 'tstest'
-import * as tfc from '@tensorflow/tfjs-core'
+import tfjs from '@tensorflow/tfjs'
 
 import {
   loadImage,
@@ -74,11 +74,11 @@ test('EmojiNet predict() & getTopKClasses()', async t => {
 
   class EmojiNetTest extends EmojiNet {
 
-    predict (input: tfc.Tensor): tfc.Tensor1D  {
+    predict (input: tfjs.Tensor): tfjs.Tensor1D  {
       return super.predict(input)
     }
 
-    getTopKClasses (predictions: tfc.Tensor1D, topK: number) {
+    getTopKClasses (predictions: tfjs.Tensor1D, topK: number) {
       return super.getTopKClasses(predictions, topK)
     }
 
@@ -98,7 +98,7 @@ test('EmojiNet predict() & getTopKClasses()', async t => {
     }
 
     ctx.putImageData(resizedImage, 0, 0)
-    const pixels = tfc.fromPixels(canvas)
+    const pixels = await tfjs.browser.fromPixels(canvas)
 
     const result = await emojinet.predict(pixels)
 

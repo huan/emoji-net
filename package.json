@@ -26,6 +26,14 @@
   ],
   "author": "Huan LI <zixia@zixia.net>",
   "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/huan/emoji-net.git"
+  },
+  "bugs": {
+    "url": "https://github.com/huan/emoji-net/issues"
+  },
+  "homepage": "https://github.com/huan/emoji-net#readme",
   "dependencies": {
     "@tensorflow/tfjs-converter": "^0.6.7",
     "@tensorflow/tfjs-core": "^0.13.11",

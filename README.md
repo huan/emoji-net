@@ -22,49 +22,29 @@ There are two main ways to get this model in your JavaScript project: via script
 
 ### via Script Tag
 
-```html
-<!-- Load TensorFlow.js. This is required to use MobileNet. -->
-<script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@1.0.1"> </script>
-<!-- Load the EmojiNet model. -->
-<script src="https://cdn.jsdelivr.net/npm/emoji-net@1.0.0"> </script>
+Not supported yet.
 
-<!-- Replace this with your image. Make sure CORS settings allow reading the image! -->
-<img id="img" src="cat.jpg"></img>
-
-<!-- Place your code in the script tag below. You can also use an external .js file -->
-<script>
-  // Notice there is no 'import' statement. 'mobilenet' and 'tf' is
-  // available on the index-page because of the script tag above.
-
-  const img = document.getElementById('img');
-
-  // Load the model.
-  emojinet.load().then(model => {
-    // Classify the image.
-    model.scan(img).then(emojiList => {
-      console.log('emojiList: ', emojiList);
-    });
-  });
-</script>
-```
+Pull Requests are welcome!
 
 ### via NPM
 
 ```js
-// Note: you do not need to import emoji-net here.
+import { EmojiNet } from 'emoji-net'
 
-import { EmojiNet } from 'emoji-net')
+const emojinet = await new EmojiNet()
 
-const img = document.getElementById('img')
-
-// Load the model.
-const model = await new EmojiNet().load()
+// Load the model and warm it up
+await emojinet.load()
 
 // Classify the image.
-const emojiList = await model.scan(img)
-
-console.log('emoji list: ')
-console.log(emoijList)
+const emojiItemList = await model.classify('tests/fixtures/sofa.jpg')
+console.log('emojiItemList:', emojiItemList)
+// Output:
+// emojiItemList: [
+//   { id: 416, name: 'sofa', probobility: 0.9893624782562256 },
+//   { id: 61, name: 'bed', probobility: 0.007496606558561325 },
+//   { id: 241, name: 'wallet', probobility: 0.000651892158202827 }
+// ]
 ```
 
 ## API
@@ -85,13 +65,17 @@ Load the modle and warm it up.
 await emojinet.load()
 ```
 
-### `emojinet.scan()`
+### `emojinet.classify()`
 
 ```ts
-const emojiList = emojinet.scan('cat.jpg')
-emojiList.forEach(
-  emoji => console.info('found emoji:', emoji)
-)
+const emojiItemList = await emojinet.classify('tests/fixtures/sofa.jpg')
+console.log('emojiItemList:', emojiItemList)
+// Output:
+// emojiItemList: [
+//   { id: 416, name: 'sofa', probobility: 0.9893624782562256 },
+//   { id: 61, name: 'bed', probobility: 0.007496606558561325 },
+//   { id: 241, name: 'wallet', probobility: 0.000651892158202827 }
+// ]
 ```
 
 ### `emojinet.dispose()`
@@ -119,7 +103,7 @@ For more information about MobileNet, check out this readme in
 
 ### main
 
-### v0.1 (Aug 20, 2021)
+### v0.2 (Aug 20, 2021)
 
 First working version.
 

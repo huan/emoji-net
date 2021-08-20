@@ -26,27 +26,3 @@ npm install *-*.*.*.tgz \
   smoke-testing.ts
 
 node smoke-testing.js
-
-# Huan(202107) Credit: https://stackoverflow.com/a/48287203/1123955
-function diffLines () {
-  diff \
-    -y \
-    --suppress-common-lines \
-    $1 \
-    $2 \
-    | wc -l
-}
-
-npx sidecar-dump metadata smoke-testing.ts > smoke-testing.metadata.json
-if [[ $(diffLines smoke-testing.metadata.json sidecar-dump.metadata.smoke-testing.json.fixture) -gt 10 ]]; then
-  >&2 echo "FAILED: sidecar-dump metadata smoke-testing.ts"
-  exit 1
-fi
-echo "PASSED: sidecar-dump metadata smoke-testing.ts"
-
-npx sidecar-dump source smoke-testing.ts > smoke-testing.source.js
-if [[ $(diffLines smoke-testing.source.js sidecar-dump.source.smoke-testing.js.fixture) -gt 10 ]]; then
-  >&2 echo "FAILED: sidecar-dump source smoke-testing.ts"
-  exit 1
-fi
-echo "PASSED: sidecar-dump source smoke-testing.ts"

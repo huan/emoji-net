@@ -1,7 +1,7 @@
 #!/usr/bin/env ts-node
 
 /**
- *   Sidecar - https://github.com/huan/sidecar
+ *   EmojiNet - https://github.com/huan/emoji-net
  *
  *   @copyright 2021 Huan LI (李卓桓) <https://github.com/huan>
  *

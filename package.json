@@ -27,7 +27,7 @@
   "author": "Huan LI <zixia@zixia.net>",
   "license": "Apache-2.0",
   "dependencies": {
-    "@tensorflow/tfjs-converter": "^0.6.7",
+    "@tensorflow/tfjs-converter": "^3.8.0",
     "@tensorflow/tfjs-core": "^0.13.12",
     "canvas": "^2.8.0",
     "isomorphic-fetch": "^3.0.0",

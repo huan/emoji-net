@@ -119,6 +119,10 @@ For more information about MobileNet, check out this readme in
 
 ### main
 
+### v0.1 (Aug 20, 2021)
+
+First working version.
+
 ### v0.0.1 (Aug 19, 2021)
 
 Initial version.

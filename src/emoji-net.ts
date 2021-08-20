@@ -74,7 +74,7 @@ class EmojiNet {
     }
   }
 
-  async classify (src: string | Buffer): Promise<PredictItem[]> {
+  async recognize (src: string | Buffer): Promise<PredictItem[]> {
     const image         = await loadImage(src)
     const resizedImage  = await resizeImage(image, MOBILENET_SIZE, MOBILENET_SIZE)
 

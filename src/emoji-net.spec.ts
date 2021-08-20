@@ -59,7 +59,7 @@ test('EmojiNet smoke testing', async t => {
   const predictItemList = await Promise.all(
     FIXTURE_IMAGE_LABEL_LIST
       .map(x => x.file)
-      .map(file => emojinet.classify(file))
+      .map(file => emojinet.recognize(file))
   )
 
   const emojiList = predictItemList.map(x => x[0].name)

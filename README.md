@@ -36,8 +36,8 @@ const emojinet = await new EmojiNet()
 // Load the model and warm it up
 await emojinet.load()
 
-// Classify the image.
-const emojiItemList = await model.classify('tests/fixtures/sofa.jpg')
+// recognize the image.
+const emojiItemList = await emojinet.recognize('tests/fixtures/sofa.jpg')
 console.log('emojiItemList:', emojiItemList)
 // Output:
 // emojiItemList: [
@@ -65,10 +65,10 @@ Load the modle and warm it up.
 await emojinet.load()
 ```
 
-### `emojinet.classify()`
+### `emojinet.recognize()`
 
 ```ts
-const emojiItemList = await emojinet.classify('tests/fixtures/sofa.jpg')
+const emojiItemList = await emojinet.recognize('tests/fixtures/sofa.jpg')
 console.log('emojiItemList:', emojiItemList)
 // Output:
 // emojiItemList: [

@@ -47,7 +47,7 @@
     "@chatie/tsconfig": "^0.16.2",
     "@types/lodash": "^4.14.172",
     "shx": "^0.3.3",
-    "tstest": "^0.5.16"
+    "tstest": "^0.7.2"
   },
   "git": {
     "scripts": {

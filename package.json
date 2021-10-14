@@ -1,6 +1,6 @@
 {
   "name": "emoji-net",
-  "version": "0.2.3",
+  "version": "0.3.0",
   "description": "EmojiNet is an image to emoji recognizer based on MobileNet / Google Emoji Scavenger Hunt",
   "main": "dist/src/mod.js",
   "typings": "dist/src/mod.d.ts",
@@ -35,8 +35,7 @@
   },
   "homepage": "https://github.com/huan/emoji-net#readme",
   "dependencies": {
-    "@tensorflow/tfjs-converter": "^0.6.7",
-    "@tensorflow/tfjs-core": "^0.13.11",
+    "@tensorflow/tfjs": "^3.8.0",
     "canvas": "^2.8.0",
     "isomorphic-fetch": "^3.0.0",
     "lodash": "^4.17.21"

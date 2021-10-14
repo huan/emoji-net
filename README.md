@@ -101,7 +101,9 @@ For more information about MobileNet, check out this readme in
 
 ## History
 
-### main
+### main v0.3
+
+1. Upgrade to TensorFlow.js v3.8 ([#3](https://github.com/huan/emoji-net/issues/3))
 
 ### v0.2 (Aug 20, 2021)
 
